@@ -22,7 +22,7 @@ async function getAllLocations() {
       locationsIDList.push(locationId);
     }
     hasNextPage = response?.data?.locations?.pageInfo?.hasNextPage;
-    cursor = locationsList[locationsList.length - 1]?.cursor;
+    cursor = response?.data?.locations?.pageInfo?.endCursor;
   }
 
   if (locationsIDList.length === 0) {
@@ -66,7 +66,7 @@ async function getProducts(vendor, locationID) {
     }
 
     hasNextPage = response?.data?.products?.pageInfo?.hasNextPage;
-    cursor = products[products.length - 1]?.cursor;
+    cursor = response?.data?.products?.pageInfo?.endCursor;
   }
 
   if (inventoryItemList.length === 0) {
@@ -115,22 +115,26 @@ async function setQuantity(quantityInput) {
 // Main job execution
 async function main() {
   try {
-    const vendorName = "Harvey";
+    const vendorName = "Nectar";
     const locationsOutput = await getAllLocations();
-    const quantityChangesList = [];
     for (const location of locationsOutput) {
       const getProductsOutput = await getProducts(vendorName, location);
+      const productPromises = [];
       for (const product of getProductsOutput) {
-        const setQuantityOutput = await setQuantity(product);
-        quantityChangesList.push(setQuantityOutput);
+        productPromises.push(setQuantity(product));
       }
+      setQuantityOutputs = await Promise.all(productPromises);
+      console.log(
+        `Successfully updated the quantity of ${setQuantityOutputs.length} products`
+      );
     }
-    console.log("All requested quantities successfully updated");
   } catch (error) {
     console.error("Error:", error.message);
   }
 }
 
-// Schedule the job to run hourly
-cron.schedule("* * * * * *", main);
+// Run the job initially
+main();
+// Schedule the job to run at the start of each hour
+cron.schedule("0 * * * * ", main);
 console.log("Task is scheduled to run hourly");

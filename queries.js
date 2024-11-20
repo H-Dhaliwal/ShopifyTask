@@ -24,8 +24,7 @@ const UPDATE_METAFIELD = `mutation($productID: ID!, $namespace: String!, $key: S
       ]
       }) {
         product {
-          id
-          metafields(first: 1, namespace: $namespace) {
+          metafields(namespace: $namespace, first: 100) {
             edges {
               node {
                 key
@@ -42,7 +41,7 @@ const UPDATE_METAFIELD = `mutation($productID: ID!, $namespace: String!, $key: S
     }`;
 
 const GET_ALL_LOCATIONS = `query($cursor: String) {
-    locations(first: 10, after: $cursor) {
+    locations(first: 100, after: $cursor) {
       edges {
         cursor
         node {
@@ -55,12 +54,13 @@ const GET_ALL_LOCATIONS = `query($cursor: String) {
       }
       pageInfo {
         hasNextPage
+        endCursor
       }
     }
   }`;
 
 const GET_PRODUCTS = `query($cursor: String, $vendor: String!, $locationId: ID!) {
-    products(first: 10, query: $vendor, after: $cursor) {
+    products(first: 100, query: $vendor, after: $cursor) {
       edges {
         cursor
         node {
@@ -84,6 +84,7 @@ const GET_PRODUCTS = `query($cursor: String, $vendor: String!, $locationId: ID!)
       }
       pageInfo {
         hasNextPage
+        endCursor
       }
     }
   }`;
