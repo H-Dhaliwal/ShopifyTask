@@ -24,13 +24,8 @@ const UPDATE_METAFIELD = `mutation($productID: ID!, $namespace: String!, $key: S
       ]
       }) {
         product {
-          metafields(namespace: $namespace, first: 100) {
-            edges {
-              node {
-                key
-                value
-              }
-            }
+          firmess:metafield(namespace: $namespace, key: $key) {
+          value
           }
         }
         userErrors {

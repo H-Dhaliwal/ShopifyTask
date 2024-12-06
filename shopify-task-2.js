@@ -81,7 +81,7 @@ async function getProducts(vendor, locationID) {
 
 // Set the quantity of a product
 async function setQuantity(quantityInput) {
-  const query = SET_QUANTITY;
+  const mutation = SET_QUANTITY;
 
   let variables = {
     input: {
@@ -98,7 +98,7 @@ async function setQuantity(quantityInput) {
     },
   };
 
-  const response = await makeGraphQLRequest(query, variables);
+  const response = await makeGraphQLRequest(mutation, variables);
   const userErrors = response?.data?.inventorySetQuantities?.userErrors;
   if (userErrors?.length > 0) {
     console.error("Errors:", userErrors);

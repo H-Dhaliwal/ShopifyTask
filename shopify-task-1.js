@@ -33,20 +33,9 @@ async function updateMetafield(productID, namespace, key, value, type) {
     console.error("Errors:", userErrors);
     throw new Error("Failed to update the metafield.");
   }
-  const metafields = response?.data?.productUpdate?.product?.metafields?.edges;
-  const updatedMetafieldValue = locateKey(metafields, key);
+  const updatedMetafieldValue =
+    response?.data?.productUpdate?.product?.firmess?.value;
   return updatedMetafieldValue;
-}
-
-// Helper to locate key from response and return associated value
-function locateKey(metafields, targetKey) {
-  for (let i = 0; i < metafields.length; i++) {
-    if (metafields[i].node.key === targetKey) {
-      return metafields[i].node.value;
-    }
-  }
-  console.warn(`Key '${targetKey}' not found in response metafields`);
-  return null;
 }
 
 // Main function to execute the task
